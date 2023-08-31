@@ -1,6 +1,6 @@
 body {
-  background-color: #F5F7FB;
-  color: #293264;
+  background-color: #023047;
+  color: #8ECAE6;
   font-family: 'Inter', sans-serif;
 }
 
@@ -9,10 +9,11 @@ h1 {
 }
 
 button {
-  background-color: #4D5B9E;
+  background-color: #219EBC;
   border: none;
   border-radius: 15px;
-  color:#F5F7FB;
+  color:#023047;
+  font-size: 1rem;
   height: 50px;
   width: 200px;
 }
