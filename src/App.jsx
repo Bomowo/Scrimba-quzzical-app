@@ -3,14 +3,18 @@ import Question from "./components/question";
 import { decode } from "html-entities";
 
 function App() {
+  // Initializing array for storing our questions
   const qArr = []
 
   const [data, setData] = useState(null);
+  const [gameInProgress, setGameInProgress] = useState(false);
 
+  // getting data from API before our first render
   useEffect(() => {
     fetchQuizData();
   }, []);
 
+  //Fetching data from open trivia database
   const fetchQuizData = async () => {
     fetch("https://opentdb.com/api.php?amount=5&category=26&type=multiple")
       .then((response) => response.json())
@@ -18,9 +22,14 @@ function App() {
       .catch((error) => console.error(error));
   };
 
+  // function to change state of our game (inprogres or not)
   function clickHandle() {
     console.log(data);
+
+    setGameInProgress(prevState => !prevState)
   }
+
+  //Fillout our question array when we get the data
   if (data) {  for (let i = 0; i < 5; i++) {
     qArr.push(<Question
       key = {i}
@@ -34,19 +43,18 @@ function App() {
 
   return (
     <div>
-      <div className="start-page">
+      {gameInProgress?<div className="question-list">
+        {data && qArr}
+        <button onClick={clickHandle}>Check Answers</button>
+      </div>:<div className="start-page">
         <h1>Quizzical</h1>
         <p>Some description if needed</p>
-        <button onClick={clickHandle}>Start quiz</button>
-      </div>
-      <div className="question-list">
-        {data && qArr}
-      </div>
+        <button onClick={clickHandle}>Start Quiz</button>
+      </div>}
+
+
     </div>
   );
 }
 
 export default App;
-
-
-/*&#039;s*/
