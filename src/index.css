@@ -18,8 +18,17 @@ button {
   width: 200px;
 }
 
+hr {
+  border-color: #DBDEF0;
+}
+
 .start-page{
   margin: 15% auto;
   width: 500px;
+  text-align: center;
+}
+.question-list {
+  margin: 0 auto;
+  width: 1000px;
   text-align: center;
 }
