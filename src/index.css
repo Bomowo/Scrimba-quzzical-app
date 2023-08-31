@@ -1,0 +1,24 @@
+body {
+  background-color: #F5F7FB;
+  color: #293264;
+  font-family: 'Inter', sans-serif;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+button {
+  background-color: #4D5B9E;
+  border: none;
+  border-radius: 15px;
+  color:#F5F7FB;
+  height: 50px;
+  width: 200px;
+}
+
+.start-page{
+  margin: 15% auto;
+  width: 500px;
+  text-align: center;
+}
