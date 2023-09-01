@@ -14,7 +14,7 @@ import { nanoid } from "nanoid";
  +++  1.4 other answers
 +++ 2 transfer id's of answer to buttons and id of correct answer to question
 +++ 3 shuffle all answers and throw them into question
-4 get info on what answer was pressed in a question with id and check if it's the correct answer in that question
+??? 4 get info on what answer was pressed in a question with id and check if it's the correct answer in that question
 5 show user if he correctly answered the question
 6 Tally all correct answer and show it to user in the end
 */
@@ -43,21 +43,26 @@ function App() {
         for (let i=0; i<json.results.length; i++){
           outputArr.push({
             question: decode(json.results[i].question),
+            questionId: nanoid(),
             correctAnswer: {
               id: nanoid(),
-              answer: decode(json.results[i].correct_answer)
+              answer: decode(json.results[i].correct_answer),
+              style: 'none'
             },
             incorrectAnswers1: {
               id: nanoid(),
-              answer: decode(json.results[i].incorrect_answers[0])
+              answer: decode(json.results[i].incorrect_answers[0]),
+              style: 'none'
             },
             incorrectAnswers2: {
               id: nanoid(),
-              answer: decode(json.results[i].incorrect_answers[1])
+              answer: decode(json.results[i].incorrect_answers[1]),
+              style: 'none'
             },
             incorrectAnswers3: {
               id: nanoid(),
-              answer: decode(json.results[i].incorrect_answers[2])
+              answer: decode(json.results[i].incorrect_answers[2]),
+              style: 'none'
             }
   
           })
@@ -79,18 +84,15 @@ function App() {
 
   }
   // 
-  function chooseAnswer(selectedId, correctId) {
-    console.log('click ' + selectedId + 'correct answer is:' + correctId)
+  function chooseAnswer(selectedId, correctId, questionId) {
+    console.log(selectedId === correctId)
 
-    setTestForIntr(prevTest => {
-      return {
-        ...prevTest,
-      }
+    setData(prevData => {
+      console.log(Object.values(prevData.find(Obj => Obj.questionId === questionId)).find(Obj => Obj.id === selectedId).style = 'selected')
     })
   }
 
 
-  // Initializing array for storing our questions
 
 
   //Fillout our question array when we get the data
@@ -104,17 +106,22 @@ function App() {
       answersToMix.sort(() => .5 - Math.random())
   
       qArr.push(<Question
+        questionId = {data[i].questionId}
         idOfAnswer = {data[i].correctAnswer.id}
-        key = {nanoid()}
+        key = {data[i].questionId}
         question={data[i].question}
         answer1={answersToMix[0].answer}
         answer1Id = {answersToMix[0].id}
+        style1 = {answersToMix[0].style}
         answer2={answersToMix[1].answer}
         answer2Id = {answersToMix[1].id}
+        style2 = {answersToMix[1].style}
         answer3={answersToMix[2].answer}
         answer3Id = {answersToMix[2].id}
+        style3 = {answersToMix[2].style}
         answer4={answersToMix[3].answer}
         answer4Id ={answersToMix[3].id}
+        style4 = {answersToMix[3].style}
         selectAnswer={chooseAnswer}
       />)
     }
