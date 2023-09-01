@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState  } from "react";
 import Question from "./components/question";
 import { decode } from "html-entities";
 import { nanoid } from "nanoid";
@@ -20,17 +20,15 @@ import { nanoid } from "nanoid";
 */
 
 function App() {
-  // Initializing array for storing our questions
-  const qArr = []
-
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({});
   const [gameInProgress, setGameInProgress] = useState(false);
-  const [testForIntr, setTestForIntr] = useState(false);
+  const [questionArr, setQuestionArr] = useState([])
+  const [testForIntr, setTestForIntr] = useState(0);
 
   // getting data from API before our first render
   useEffect(() => {
     fetchQuizData();
-    
+
     console.log('Use Effect in use')
   }, []);
 
@@ -39,7 +37,7 @@ function App() {
     fetch("https://opentdb.com/api.php?amount=5&category=26&type=multiple")
       .then((response) => response.json())
       .then((json) =>   {setData(() => {
-        console.log(json)
+
         let outputArr = []
   
         for (let i=0; i<json.results.length; i++){
@@ -64,7 +62,7 @@ function App() {
   
           })
         }
-        console.log(outputArr)
+
         return outputArr
       })})
       .catch((error) => console.error(error));
@@ -72,55 +70,68 @@ function App() {
 
   // function to change state of our game (inprogres or not)
   function clickHandle() {
-    console.log(data);
 
-    setGameInProgress(prevState => !prevState)
+    if(!gameInProgress) {
+      setQuestionArr(fillQuestion())
+
+      setGameInProgress(prevState => !prevState)
+    }
+
   }
   // 
   function chooseAnswer(selectedId, correctId) {
     console.log('click ' + selectedId + 'correct answer is:' + correctId)
 
-    if(selectedId === correctId) {
-      setTestForIntr(true)
-      console.log(testForIntr)
-    }
+    setTestForIntr(prevTest => {
+      return {
+        ...prevTest,
+      }
+    })
   }
 
+
+  // Initializing array for storing our questions
+
+
   //Fillout our question array when we get the data
-  if (data) {  for (let i = 0; i < data.length; i++) {
+  function fillQuestion () {
+    const qArr = []
 
-    const answersToMix = [data[i].correctAnswer, data[i].incorrectAnswers1, data[i].incorrectAnswers2, data[i].incorrectAnswers3]
+    for (let i = 0; i < data.length; i++) {
 
-    console.log(answersToMix.sort(() => .5 - Math.random()))
+      const answersToMix = [data[i].correctAnswer, data[i].incorrectAnswers1, data[i].incorrectAnswers2, data[i].incorrectAnswers3]
+  
+      answersToMix.sort(() => .5 - Math.random())
+  
+      qArr.push(<Question
+        idOfAnswer = {data[i].correctAnswer.id}
+        key = {nanoid()}
+        question={data[i].question}
+        answer1={answersToMix[0].answer}
+        answer1Id = {answersToMix[0].id}
+        answer2={answersToMix[1].answer}
+        answer2Id = {answersToMix[1].id}
+        answer3={answersToMix[2].answer}
+        answer3Id = {answersToMix[2].id}
+        answer4={answersToMix[3].answer}
+        answer4Id ={answersToMix[3].id}
+        selectAnswer={chooseAnswer}
+      />)
+    }
 
-    qArr.push(<Question
-      idOfAnswer = {data[i].correctAnswer.id}
-      key = {nanoid()}
-      question={data[i].question}
-      answer1={answersToMix[0].answer}
-      answer1Id = {answersToMix[0].id}
-      answer2={answersToMix[1].answer}
-      answer2Id = {answersToMix[1].id}
-      answer3={answersToMix[2].answer}
-      answer3Id = {answersToMix[2].id}
-      answer4={answersToMix[3].answer}
-      answer4Id ={answersToMix[3].id}
-      selectAnswer={chooseAnswer}
-    />)
-  }}
+    return qArr
+  }
 
   return (
     <div>
       {gameInProgress?<div className="question-list">
-        {data && qArr}
+        {questionArr}
         <button onClick={data && clickHandle}>Check Answers</button>
       </div>:<div className="start-page">
         <h1>Quizzical</h1>
         <p>5 Question about celebrities of different diffuculty</p>
         <button onClick={clickHandle}>Start Quiz</button>
       </div>}
-
-
     </div>
   );
 }
